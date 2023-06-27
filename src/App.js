@@ -2,7 +2,7 @@
  
 import './App.css';
 import Navbar from './komponente/Navbar';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter, Route, Routes, useNavigate} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LoginPage from './komponente/LoginPage';
 import React from 'react';
@@ -28,6 +28,7 @@ function App() {
   useEffect(() => {
     const getZadaci = async () => {
       try {
+        console.log("get zadaci");
         const res = await axiosInstance.get( "http://127.0.0.1:8000/api/zadatak", //ovde povezujem
           {
             headers:{'Authorization': `Bearer ${ window.sessionStorage.getItem('auth_token')}`},
@@ -80,6 +81,7 @@ function App() {
     .delete("http://127.0.0.1:8000/api/zadatak/"+id,{headers:{'Authorization': `Bearer ${ window.sessionStorage.getItem('auth_token')}`} } )
     .then((res)=>{  
         console.log(res.data);
+        osveziZadatke();
         alert("OBRISANO")
     })
     .catch(function (error) {
@@ -99,6 +101,26 @@ function App() {
     
       });
   }
+
+  function osveziZadatke() {
+    try {
+      console.log("get zadaci");
+      const res =  axiosInstance.get( "http://127.0.0.1:8000/api/zadatak", //ovde povezujem
+          {
+            headers:{'Authorization': `Bearer ${ window.sessionStorage.getItem('auth_token')}`},
+          }
+      ).then(function (res) {
+
+        console.log(res);
+        setZadaci(res.data.data);
+        console.log(res.data.data)
+      });
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   function dodaj() {
     const zadatakData = {
       user_id: window.sessionStorage.getItem("auth_id"),
@@ -156,8 +178,8 @@ function App() {
             <Route path="/admin/azuriraj" element={<Azuriraj zadatak={zadatakZaAzuriranje}></Azuriraj>}></Route>
             
 
-            <Route path="/admin/dodaj" element={<Dodaj></Dodaj> }></Route>
-            <Route path="/admin" element={<AdminPocetna  zadaci={zadaci} obrisi={obrisi} setZadatakAzuriraj={setZadatakAzuriraj} setZadatakRadovi={setZadatakRadovi}></AdminPocetna>}></Route>
+            <Route path="/admin/dodaj" element={<Dodaj osveziZadatke={osveziZadatke}></Dodaj> }></Route>
+            <Route path="/admin" element={<AdminPocetna  zadaci={zadaci}  obrisi={obrisi} setZadatakAzuriraj={setZadatakAzuriraj} setZadatakRadovi={setZadatakRadovi}></AdminPocetna>}></Route>
           
            
           </Routes>

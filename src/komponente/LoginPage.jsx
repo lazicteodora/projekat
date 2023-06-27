@@ -37,6 +37,7 @@ function LoginPage({addToken}) {
 
                     addToken(res.data[0].token);
                     console.log(res.data[0].token);
+
                     if(res.data[0].role === 'admin')
                     {
          

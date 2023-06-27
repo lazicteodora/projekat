@@ -3,8 +3,11 @@ import {useState} from "react";
  import './LoginStyle.css';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-function Dodaj() {
+function Dodaj({osveziZadatke}) {
 
+    function osvezi(){
+        osveziZadatke();
+    }
 
     
     const [zadatakData,setZadatakData]=useState({
@@ -33,8 +36,10 @@ function Dodaj() {
             .then((res)=>{ 
                 console.log(res);
                 if(res.status===200){
-
+                osvezi();
                  alert("USPESNO");
+                 navigate("/admin");
+
 
 
 
